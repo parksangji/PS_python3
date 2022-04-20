@@ -1,43 +1,57 @@
-import sys ; from collections import deque
-r1,c1 = map(int,sys.stdin.readline().split()) ; r2,c2 = map(int,sys.stdin.readline().split())
-dx = [-3,-2,2,3,3,2,-2,-3]
-dy = [2,3,3,2,-2,-3,-3,-2]
-d = {
-  0 : ((-2,1),(-1,0)),
-  1 : ((-1,2),(0,1)),
-  2 : ((1,2),(0,1)),
-  3 : ((2,1),(1,0)),
-  4 : ((2,-1),(1,0)),
-  5 : ((1,-2),(0,-1)),
-  6 : ((-1,-2),(0,-1)),
-  7 : ((-2,-1),(-1,0)),
-}
-def outRange(x,y) :
-  if 0 <= x <= 9 and 0 <= y <= 8 :
-      return False
-  return True
+import sys; from collections import deque
+
+def init(r,c) :
+  red = [] ; blue = [] ; board = []
+  for i in range(r) :
+    tmp = list(sys.stdin.readline().strip())
+    for j in range(c) :
+      if tmp[j] == 'R' :
+        red = [i,j]
+      if tmp[j] == 'B' :
+        blue = [i,j]
+    board.append(tmp)
+  return board,red,blue
+
+def move(x,y,i,c) :
+  while arr[x+dx[i]][y+dy[i]] != '#' and arr[x][y] != 'O' :
+    x += dx[i]
+    y += dy[i]
+    c += 1
+  return x,y,c
+
 def bfs() :
-  board = [[0] * 9 for _ in range(10)]
   q = deque()
-  q.append([r1,c1])
-  board[r1][c1] = 0
+  q.append([red[0],red[1],blue[0],blue[1],0])
+  visited = {str(red[0]) + str(red[1]) + str(blue[0]) + str(blue[1]) : True}
   while q :
-    x,y = q.popleft()
-    for i in range(8) :
-      nx = x + dx[i]
-      ny = y + dy[i]
-      if outRange(nx,ny) or board[nx][ny]:
+    rx,ry,bx,by,cnt = q.popleft()
+    if cnt >= 10 :
+      break
+    for i in range(4) :
+      nrx,nry,rc = move(rx,ry,i,0)
+      nbx,nby,bc = move(bx,by,i,0)
+      if arr[nbx][nby] == 'O' :
         continue
-      flag = False
-      for xx,yy in d[i] :
-        if x + xx == r2 and y + yy == c2 :
-          flag = True
-          break
-      if flag :
+      if arr[nrx][nry] == 'O' :
+        return cnt + 1
+      if nrx == nbx and nry == nby :
+        if rc > bc :
+          nrx -= dx[i]
+          nry -= dy[i]
+        else :
+          nbx -= dx[i]
+          nby -= dy[i]
+      route = str(nrx) + str(nry) + str(nbx) + str(nby)
+      if route in visited :
         continue
-      if nx == r2 and ny == c2 :
-        return board[x][y] + 1
-      board[nx][ny] = board[x][y] + 1
-      q.append([nx,ny])
+      visited[route] = True
+      q.append([nrx,nry,nbx,nby,cnt+1])
   return -1
+
+n,m = map(int,sys.stdin.readline().split())
+arr,red,blue = init(n,m)
+arr[red[0]][red[1]] = '.'
+arr[blue[0]][blue[1]] = '.'
+dx = [0,0,-1,1]
+dy = [1,-1,0,0]
 print(bfs())
