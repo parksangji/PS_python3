@@ -17,4 +17,3 @@ for i in range(costSum + 1) :
   if dp[n][i] >= m :
     print(i)
     break
-    
