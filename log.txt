@@ -1,0 +1,27 @@
+import sys,heapq; input = sys.stdin.readline
+c,h = map(int,input().split()) 
+race,train = [],{}
+
+# 충주로 향하는 하행 열차
+for _ in range(c) :
+  num,time = input().strip().split()
+  hh,mm = time.split(":")
+  time = int(hh) * 60 + int(mm)
+  train[int(num)] = time
+  heapq.heappush(race,[0,time,int(num),1,0]) # 시간 타이머, 시작 시간, 열차 번호, 순번, 하향
+    
+# 부발로 향하는 상행 열차
+for I in range(h) :
+  num,time = input().strip().split()
+  hh,mm = time.split(":")
+  time = int(hh) * 60 + int(mm)
+  train[int(num)] = time
+  heapq.heappush(race,[0,time,int(num),1,1]) # 시간 타이머, 시작 시간, 열차 번호, 순번, 상향
+
+def trainOrder(order) :
+  
+
+
+while race :
+  size = len(race)
+  for 
