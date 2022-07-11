@@ -1,34 +1,55 @@
 import sys,collections
 input = sys.stdin.readline
+n,m = map(int,input().split())
+board = [list(map(int,input().split())) for _ in range(n)]
+dx,dy = [-1,1,0,0],[0,0,-1,1]
+dir = [(0,-1),(1,0),(0,1),(-1,0)]
 
-N,M,R = map(int,input().split())
-arr = [list(map(int,input().split())) for _ in range(N)]
-dr,dc = [1,0,-1,0],[0,1,0,-1]
-
+def fireball() :
+  d,s = map(int,input().split())
+  cnt = 0
+  x = y = n//2
+  while cnt < s :
+    x,y = x + dx[d-1], y + dy[d-1]
+    board[x][y] = 0
+    cnt+=1
+  rotation()
+  
 def rotation() :
-  for depth in range(min(N,M)//2) :
-    r = c = depth
-    q = collections.deque([])
-    for i in range(4) :
-      while True :
-        nr,nc = r + dr[i],c + dc[i]
-        if depth<= nr < N-depth and depth<= nc < M-depth :
-          q.append(arr[r][c])
-          r,c = nr,nc
-        else :
-          break
-    for _ in range(R % ((N - depth * 2) * 2 + (M - depth * 2) * 2 - 4)) :
-      q.appendleft(q.pop())
-    for i in range(4) :
-      while True :
-        nr,nc = r + dr[i],c + dc[i]
-        if depth <= nr < N - depth and depth <= nc < M -depth:
-          arr[r][c] = q.popleft()
-          r,c, = nr,nc
-        else :
-          break
-    
-rotation()
+  start = [n//2,n//2]
+  q = collections.deque([])
+  cnt,d,depth = 0,0,1
+  x,y = start
+  while 0<= x < n and 0 <= y < n :
+    for _ in range(depth) :
+      x,y = x + dir[d][0], y + dir[d][1]
+      if board[x][y] != 0 :
+        q.append(board[x][y])
+    d = (d + 1) % 4
+    cnt += 1
+    if cnt % 2 == 0 : depth += 1
+  cnt,d,depth = 0,0,1
+  x,y = start
+  while 0<= x < n and 0 <= y < n :
+    for _ in range(depth) :
+      x,y = x + dir[d][0], y + dir[d][1]
+      if q : board[x][y] = q.popleft()
+      else : board[x][y] = 0
+    d = (d + 1) % 4
+    cnt += 1
+    if cnt % 2 == 0 : depth += 1
 
-for i in range(N):
-  print(*arr[i])
+def bfs(x,y,color) :
+  q = collections.deque((x,y))
+  deleteQ = [(x,y)]
+  
+
+def bumb() :
+  
+
+for _ in range(m) :
+  fireball()
+  while bumb() :
+    rotation()
+  
+  
