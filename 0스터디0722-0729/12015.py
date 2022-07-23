@@ -1,19 +1,8 @@
-n = int(input())
-arr = list(map(int,input().split()))
-list = [0]
-
-for i in range(n) :
-  a = arr[i]
-  if list[-1] < a :
-    list.append(a) 
-  else :
-    start =0
-    end = len(list)
-    while start < end :
-      mid = (start+end)//2
-      if list[mid] < a :
-        start = mid +1 
-      else :
-        end = mid
-    list[end] = a
-print(len(list) - 1)
+from bisect import bisect_left
+n,*X = map(int,open(0).read().split())
+arr = []
+for x in X :
+  if not arr : arr.append(x) ; continue
+  if arr[-1] < x : arr.append(x)
+  else : arr[bisect_left(arr,x) ] = x
+print(len(arr))
