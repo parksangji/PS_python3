@@ -1,8 +1,13 @@
-from bisect import bisect_left
-n,*X = map(int,open(0).read().split())
-arr = []
-for x in X :
-  if not arr : arr.append(x) ; continue
-  if arr[-1] < x : arr.append(x)
-  else : arr[bisect_left(arr,x) ] = x
-print(len(arr))
+import sys,collections; input= sys.stdin.readline
+def suffixSum(arr,l) :
+    default = collections.defaultdict(int)
+    for i in range(l) :
+        suffix = 0
+        for cur in arr[i:] + arr[:i] : suffix += cur;default[suffix] += 1
+    default[sum(arr)] = 1
+    return default
+
+pizza = int(input())
+n,m = map(int,input().split())
+A,B = suffixSum([int(input()) for _ in range(n)],n),suffixSum([int(input()) for _ in range(m)],m)
+print(A[pizza] + B[pizza] + sum([A[i] * B[pizza-i] for i in A]))
